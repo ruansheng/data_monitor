@@ -1,0 +1,53 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <title>data monitor</title>
+    <meta charset="utf-8"/>
+</head>
+<body>
+<div id="chartContainer" style="height: 300px; width: 100%;">
+</div>
+<script type="text/javascript" src="/js/jquery-2.0.0.min.js"></script>
+<script type="text/javascript" src="/js/canvasjs.min.js"></script>
+<script>
+    $(function() {
+        function loadCanvas(data) {
+            var chart = new CanvasJS.Chart("chartContainer",
+                    {
+                        title: {
+                            text: "Date Time Formatting"
+                        },
+                        zoomEnabled: true,
+                        axisX:{
+                            valueFormatString: "YY-MM-DD HH:mm:ss" ,
+                            labelAngle: -50,
+                        },
+                        axisY: {
+                            interval: 5,
+                            minimum: 0,
+                            maximum: 25,
+                            includeZero: false
+                        },
+                        data: [
+                            {
+                                type: "line",
+                                dataPoints:data
+                            }
+
+                        ]
+                    });
+
+            chart.render();
+        }
+        var url = '/data/index';
+        $.get(url,function(ret) {
+            var data = [];
+            for(var i=0; i<ret.length; i++) {
+                data.push({x:new Date(ret[i].x),y:ret[i].y});
+            }
+            loadCanvas(data);
+        });
+    });
+</script>
+</body>
+</html>
