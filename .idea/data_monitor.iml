@@ -4,5 +4,6 @@
     <content url="file://$MODULE_DIR$" />
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
+   <orderEntry type="library" name="data_monitor node_modules" level="project" />
   </component>
 </module>

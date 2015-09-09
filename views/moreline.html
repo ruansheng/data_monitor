@@ -1,0 +1,96 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <title>data monitor</title>
+    <meta charset="utf-8"/>
+    <style>
+        body{
+            background:gray;
+        }
+    </style>
+</head>
+<body>
+<div id="chartContainer" style="margin:0 auto;height: 400px; width: 80%;">
+</div>
+<script type="text/javascript" src="/js/jquery-2.0.0.min.js"></script>
+<script type="text/javascript" src="/js/canvasjs.min.js"></script>
+<script>
+    $(function() {
+        function loadCanvas(data1,data2) {
+            CanvasJS.addColorSet("lineShades", ["red","black"]);
+            var chart = new CanvasJS.Chart("chartContainer",
+                    {
+                        title: {
+                            fontSize: 24,
+                            margin: 20,
+                            padding: 15,
+                            text: "数据监控"
+                        },
+                        zoomEnabled: true,   //支持缩放
+                        exportFileName: "monitor-image", //导出图片的名称
+                        exportEnabled: true,   //支持导出图片
+                        colorSet: "lineShades",  //曲线的颜色
+                        backgroundColor: "white", //背景颜色
+                        axisX:{
+                            valueFormatString: "HH:mm:ss" ,  //YY-MM-DD HH:mm:ss
+                            intervalType: "minute",
+                            tickLength: 8,     //分隔标签下标长度
+                            labelFontSize: 12, //分隔标签字体大小
+                            lineThickness: 1,  //坐标线大小
+                        },
+                        axisY: {
+                            interval: 5,
+                            minimum: 0,
+                            maximum: 25,
+                            tickLength: 0,      //分隔标签下标长度
+                            labelFontSize: 12,  //分隔标签字体大小
+                            lineThickness: 0,   //坐标线大小
+                            gridThickness : 1,  //坐标线大小
+                            includeZero: false
+                        },
+                        legend: {   //toggle : hide | show
+                            cursor: "pointer",
+                            itemclick: function (e) {
+                                if (typeof (e.dataSeries.visible) === "undefined" || e.dataSeries.visible) {
+                                    e.dataSeries.visible = false;
+                                } else {
+                                    e.dataSeries.visible = true;
+                                }
+                                e.chart.render();
+                            }
+                        },
+                        data: [
+                            {
+                                type: "line",
+                                dataPoints:data1,
+                                showInLegend: true,
+                                legendText: 'cpu' //name : "cpu" 也行
+                            },
+                            {
+                                type: "line",
+                                dataPoints:data2,
+                                showInLegend: true,
+                                legendText: 'memory' //name : "cpu" 也行
+                            }
+                        ]
+                    });
+
+            chart.render();
+        }
+        var url = '/data/index';
+        $.get(url,function(ret) {
+            var data1 = [];
+            for(var i=0; i<ret[0].length; i++) {
+                data1.push({x:new Date(ret[0][i].x),y:ret[0][i].y});
+            }
+
+            var data2 = [];
+            for(var i=0; i<ret[1].length; i++) {
+                data2.push({x:new Date(ret[1][i].x),y:ret[1][i].y});
+            }
+            loadCanvas(data1,data2);
+        });
+    });
+</script>
+</body>
+</html>
