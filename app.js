@@ -46,6 +46,6 @@ app.get(routes.cpu,Index.cpu);
  */
 app.get(routes.data_cpu,Data.cpu);
 
-app.listen(6677,function() {
-	console.log('listen to 6677');
+app.listen(3000,function() {
+	console.log('listen to 3000');
 });
